@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text } from 'react-native';
 import { Card } from 'react-native-elements';
 
-class ContactUs extends Component {
+class Contact extends Component {
 
     static navigationOptions = {
         title: "Contact Us",
@@ -24,4 +24,4 @@ class ContactUs extends Component {
     }
 }
 
-export default ContactUs;
+export default Contact;

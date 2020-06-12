@@ -37,7 +37,7 @@ const RenderLeaders = ({leaders}) => {
     }
 };
 
-class AboutUs extends Component {
+class About extends Component {
 
     constructor(props) {
         super(props);
@@ -61,4 +61,4 @@ class AboutUs extends Component {
     };
 };
 
-export default AboutUs;
+export default About;
