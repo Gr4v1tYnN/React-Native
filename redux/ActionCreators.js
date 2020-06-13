@@ -110,27 +110,27 @@ export const addPromos = (promos) => ({
 
 
 export const fetchLeaders = () => (dispatch) => {
+    
     dispatch(leadersLoading());
 
     return fetch(baseUrl + 'leaders')
     .then(response => {
         if (response.ok) {
             return response;
-        }
-        else {
+        } else {
             var error = new Error('Error ' + response.status + ': ' + response.statusText);
             error.response = response;
             throw error;
         }
-    },
-    error => {
-        var error = new Error(error.message);
-        throw errMess;
-    })
+        },
+        error => {
+            var errmess = new Error(error.message);
+            throw errmess;
+        })
     .then(response => response.json())
     .then(leaders => dispatch(addLeaders(leaders)))
-    .catch(error => dispatch(leadersFailed(error.message)))
-}
+    .catch(error => dispatch(leadersFailed(error.message)));
+};
 
 export const leadersLoading = () => ({
     type: ActionTypes.LEADERS_LOADING
