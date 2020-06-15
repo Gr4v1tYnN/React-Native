@@ -88,14 +88,21 @@ class Reservation extends Component {
                     <Button onPress={() => this.handleReservation()} title="Reserve" color="#512DA8" accessibilityLabel="Learn more about this purple button"
                     />
                 </View>
-                <Modal animationType={'slide'} transparent={false} visible={this.state.showModal} onDismiss={() => {this.toggleModal(), this.resetForm()}}
-                onRequestClose={() => {this.toggleModal(), this.resetForm()}} >
-                    <View style={styles.modal}>
-                        <Text style={styles.modalTitle}>Your Reservation</Text>
-                        <Text style={styles.modalText}>Number of Guests: {this.state.guests}</Text>
-                        <Text style={styles.modalText}>Smoking? : {this.state.smoking ? 'Yes' : 'No'}</Text>
-                        <Text style={styles.modalText}>Date and Time: {this.state.date}</Text>
-                        <Button onPress={() => {this.toggleModal(), this.resetForm()}} color='#512DA8' title='Close' />
+                <Modal animationType = {"slide"} transparent = {false}
+                    visible = {this.state.showModal}
+                    onDismiss = {() => this.toggleModal() }
+                    onRequestClose = {() => this.toggleModal() }>
+                    <View style = {styles.modal}>
+                        <Text style = {styles.modalTitle}>Your Reservation</Text>
+                        <Text style = {styles.modalText}>Number of Guests: {this.state.guests}</Text>
+                        <Text style = {styles.modalText}>Smoking?: {this.state.smoking ? 'Yes' : 'No'}</Text>
+                        <Text style = {styles.modalText}>Date and Time: {this.state.date}</Text>
+                        
+                        <Button 
+                            onPress = {() =>{this.toggleModal(); this.resetForm();}}
+                            color="#512DA8"
+                            title="Close" 
+                            />
                     </View>
                 </Modal>
             </ScrollView>
