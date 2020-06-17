@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { postFavorite, postComment } from '../redux/ActionCreators';
 import { Rating, AirbnbRating, Input } from 'react-native-elements';
+import { withNavigation } from "react-navigation";
 import * as Animatable from 'react-native-animatable';
 
 const mapStateToProps = state => {
@@ -37,10 +38,10 @@ function RenderDish(props) {
         onStartShouldSetPanResponder: (e, gestureState) => {
             return true;
         },
-        // onPanResponderGrant: () => {
-        //     this.view.rubberBand(1000)
-        //     .then(endState => console.log(endState.finished ? 'finished' : 'cancelled'));
-        // },
+        onPanResponderGrant: () => {
+            this.view.rubberBand(1000)
+            .then(endState => console.log(endState.finished ? 'finished' : 'cancelled'));
+        },
         onPanResponderEnd: (e, gestureState) => {
             if (recognizeDrag(gestureState))
                 Alert.alert(
@@ -56,14 +57,16 @@ function RenderDish(props) {
                     ],
                     { cancelable: false }
                 )
-
+                else if (recognizeComment(gestureState)) {
+                    props.toggleModal();
+                }  
             return true;
         }
     });
     
         if (dish != null) {
             return(
-                <Animatable.View animation="fadeInDown" duration={2000} delay={1000} /*ref={this.handleViewRef}*/ {...panResponder.panHandlers}>
+                <Animatable.View animation="fadeInDown" duration={2000} delay={1000} ref={this.handleViewRef} {...panResponder.panHandlers}>
                     <Card featuredTitle={dish.name} image={{ uri: baseUrl + dish.image}}>
                         <Text style={{margin: 10}}>
                             {dish.description}
@@ -93,7 +96,7 @@ function RenderComments(props) {
     }
 
     return(
-        <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+        <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
             <Card title="Comments">
                 <FlatList data={comments} renderItem={renderCommentItem} keyExtractor={item => item.id.toString()} />
             </Card>
