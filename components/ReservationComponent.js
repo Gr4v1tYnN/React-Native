@@ -3,7 +3,7 @@ import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Modal, Aler
 import { Card } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import * as Animatable from "react-native-animatable";
-import { Permissions, Notifications } from 'expo';
+import { Permissions, Notifications, Calendar } from 'expo';
 
 class Reservation extends Component {
 
@@ -35,8 +35,44 @@ class Reservation extends Component {
         this.setState({
             guests: 1,
             smoking: false,
-            date: ''
+            date: '',
+            showModal: false
         });
+    }
+
+    async obtainCalendarPermission() {
+        let permission = await Permissions.getAsync(Permissions.CALENDAR);
+        if (permission.status !== 'granted') {
+            permission = await Permissions.askAsync(Permissions.CALENDAR);
+            if (permission.status !== 'granted') {
+                Alert.alert('Permission is not granted for Calendar');
+            }
+        }
+        return permission;
+    }
+
+    async obtainDefaultCalendarId() {
+        let calendar = null;
+        if (Platform.OS === 'ios') {
+            calendar = await Calendar.getDefaultCalendarAsync();
+        } 
+        else {
+            const calendars = await Calendar.getCalendarsAsync();
+            calendar = (calendars) ? (calendars.find(cal => cal.isPrimary) || calendars[0]) : null;
+        }
+        return (calendar) ? calendar.id : null;
+    }
+
+    async addReservationToCalendar(date) {
+        await this.obtainCalendarPermission();   
+        calendarid= await this.this.obtainDefaultCalendarId(); 
+        Calendar.createEventAsync(calendarid, {
+            "title" : "Restaurante Con Fusion Table Reservation",
+            "startDate": Date(Date.parse(date)),
+            "endDate" : Date(Date.parse(date))+(2*60*60*1000),
+            "timeZone": "Asia/Hong_Kong",
+            "location": "121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong"
+        })
     }
 
     async obtainNotificationPermission() {
@@ -44,7 +80,7 @@ class Reservation extends Component {
         if (permission.status !== 'granted') {
             permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS);
             if (permission.status !== 'granted') {
-                Alert.alert('Permission not granted to show notifications');
+                Alert.alert('Permission is not granted to show notifications');
             }
         }
         return permission;
@@ -66,10 +102,7 @@ class Reservation extends Component {
                 <Animatable.View animation="zoomIn" duration={2000}>
                     <View style={styles.formRow}>
                         <Text style={styles.formLabel}>Number of Guests</Text>
-                        <Picker
-                            style={styles.formItem}
-                            selectedValue={this.state.guests}
-                            onValueChange={(itemValue, itemIndex) => this.setState({guests: itemValue})}>
+                        <Picker style={styles.formItem} selectedValue={this.state.guests} onValueChange={(itemValue, itemIndex) => this.setState({guests: itemValue})}>
                             <Picker.Item label="1" value="1" />
                             <Picker.Item label="2" value="2" />
                             <Picker.Item label="3" value="3" />
